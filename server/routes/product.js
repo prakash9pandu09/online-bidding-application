@@ -47,6 +47,7 @@ router.get('/getBids', async (req, res) => {
         const newUser = await User.findOne(bid.user);
         return {user: newUser.firstName, product: bid.product, bidPrice: bid.bidPrice, createdAt: bid.createdAt, updatedAt: bid.updatedAt};
     }));
+    newBids.sort((a, b) => (b.createdAt - a.createdAt));
     return res.json({status: 200, success: true, message: "Bids Fetched Successfully", data: newBids});
 });
 
