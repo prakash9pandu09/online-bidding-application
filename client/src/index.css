@@ -1,0 +1,18 @@
+body {
+    margin: 0;
+}
+a {
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    color: black;
+}
+dialog::backdrop {
+    background: rgba(0, 0, 0, 0.3);
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button { 
+      -webkit-appearance: none; 
+      margin: 0; 
+}
