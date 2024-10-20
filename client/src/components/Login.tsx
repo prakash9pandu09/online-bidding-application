@@ -6,6 +6,8 @@ import { Apple, Facebook, Google } from "iconoir-react";
 import { useAppDispatch, useAppSelector } from "./common/hooks";
 import { login, updateIsPasswordNotValid, updateIsUserNotRegistered } from "./store/userSlice";
 import { Type } from "./common/types";
+import { ErrorMessage, Field, Form, Formik } from "formik";
+import * as yup from 'yup';
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -40,7 +42,45 @@ const Login = () => {
             Welcome back. Enter your credentials to access your account{" "}
           </span>
         </div>
-        <div style={{ display: "flex", flexFlow: "column", gap: "4px" }}>
+        <Formik 
+            initialValues={{email: '', password: ''}}
+            validationSchema={yup.object({
+                email: yup.string().required('Email is Required'),
+                password: yup.string().required('Password is Required'),
+            })}
+            onSubmit={(values) => {
+                console.log(values);
+            }}
+        >
+           <Form style={{display: 'flex', flexFlow: 'column', gap: '16px'}}>
+                <div style={{ display: "flex", flexFlow: "column", gap: "4px" }}>
+                    <label htmlFor="email">Email Address</label>
+                    <Field name="email" type="text" 
+                        style={{
+                            height: "20px",
+                            padding: "8px",
+                            border: '1px solid grey',
+                            borderRadius: "4px",
+                        }} 
+                    />
+                    <ErrorMessage name="email" />
+                </div>
+                <div style={{ display: "flex", flexFlow: "column", gap: "4px" }}>
+                    <label htmlFor="password">Password</label>
+                    <Field name="password" type="password" 
+                        style={{
+                            height: "20px",
+                            padding: "8px",
+                            border: '1px solid grey',
+                            borderRadius: "4px",
+                        }} 
+                    />
+                    <ErrorMessage name="password" />
+                </div>
+                <button type="submit">Submit</button>
+           </Form>
+        </Formik>
+        {/*<div style={{ display: "flex", flexFlow: "column", gap: "4px" }}>
           <label htmlFor="email" style={{ fontWeight: "bold" }}>
             Email Address
           </label>
@@ -114,7 +154,7 @@ const Login = () => {
           <Button type={Type.primary} width="100%" onClick={handleSubmit}>
             Continue
           </Button>
-        </div>
+        </div>*/}
         <div
           style={{
             display: "flex",

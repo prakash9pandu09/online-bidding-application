@@ -7,7 +7,6 @@ const ProductSchema = new mongoose.Schema({
     currentBid: {type: Number, required: true},
     bidEndsBy: {type: Date, required: true},
     description: {type: String, required: true},
-    isFavorite: {type: Boolean},
     imageId: {type: Number},
     reviews: {type: Object},
 }, {timestamps: true});

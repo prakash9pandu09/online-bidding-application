@@ -26,6 +26,13 @@ Inisde server folder run bellow command
 npm start
 
 ```
+## Swagger documentation for APIs
+After starting the server, access below url in server to get the swagger documentation for APIs
+http://localhost:5100/docs/
+
+[Swagger APIs](http://localhost:5100/docs/)
+
+
 ## Contributing
 
 Still working on the improvements
