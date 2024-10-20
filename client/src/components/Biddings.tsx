@@ -39,7 +39,7 @@ const Biddings = () => {
     dispatch(placeBid({bidPrice, productId: item?.id!, email: user.email}));
     setShowDialog(false);
     await delay(1000);
-    socket.emit('placeBid', ({type: 'NewBid'}));
+    socket.emit('placeBid', ({type: 'NewBid', bidPrice}));
   };
 
   useEffect(() => {
@@ -52,7 +52,7 @@ const Biddings = () => {
         if(message.type === "NewBid") {
             id && await dispatch(getBids(parseInt(id!)));
             id && await dispatch(getBiddingItemById(parseInt(id!)));
-            id && item && dispatch(setCurrentBidPrice({id: item?.id, bidPrice: item?.currentBid}));
+            id && dispatch(setCurrentBidPrice({id: parseInt(id!), bidPrice: message?.bidPrice}));
         }
     });
     //return () => {
