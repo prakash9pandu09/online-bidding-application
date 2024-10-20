@@ -28,6 +28,10 @@ const router = express.Router();
  *           type: number
  *           description: current bidded amout
  *           example: 150
+ *         isFavorite:
+ *           type: boolean
+ *           description: is favorite item
+ *           example: false
  *         bidEndsBy:
  *           type: date
  *           description: time at bidding ends
@@ -142,6 +146,10 @@ router.get("/getItems", async (req, res) => {
  *           type: date
  *           description: time at bidding ends
  *           example: June 24, 12:45 AM
+ *         isFavorite:
+ *           type: boolean
+ *           description: is favorite item
+ *           example: false
  *         description:
  *           type: string
  *           description: product description
