@@ -15,6 +15,17 @@ router.get("/getItems", async (req, res) => {
     });
 });
 
+router.get("/getItemById/:id", async (req, res) => {
+    const {id} = req.params;
+    const item = await Product.findOne({id});
+      return res.json({
+        status: 200,
+        success: true,
+        message: "Products fetched successfully",
+        data: item,
+      });
+  });
+
 router.post('/addItem', async (req, res) => {
     const item = await Product.create(req.body);
     return res.json({

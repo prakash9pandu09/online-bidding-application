@@ -17,15 +17,14 @@ import image4 from "../assets/4.jpg";
 import image5 from "../assets/5.jpg";
 import image6 from "../assets/6.jpg";
 import image7 from "../assets/7.jpg";
-import { getBids, placeBid, setCurrentBidPrice, setItemAsFavorite } from "./store/biddingsSlice";
+import { getBiddingItemById, getBids, placeBid, setCurrentBidPrice, setItemAsFavorite, updateCurrentItem } from "./store/biddingsSlice";
 import { socket } from "../App";
 
 const Biddings = () => {
   const { id } = useParams();
   const dispatch = useAppDispatch();
   const {isLoggedIn, user}  = useAppSelector(state => state.user); 
-  const {biddingItems, bids} = useAppSelector(state => state.bidding);
-  const item = biddingItems.find((item) => item.id === parseInt(id!));
+  const { bids, currentItem: item} = useAppSelector(state => state.bidding);
   const [showDialog, setShowDialog] = useState(false);
   const images = [image1, image2, image3, image4, image5, image6, image7];
   const [bidPrice, setBidPrice] = useState(item?.currentBid!);
@@ -44,14 +43,16 @@ const Biddings = () => {
   };
 
   useEffect(() => {
-    dispatch(getBids(parseInt(id!)));
-  }, []);
+    id && dispatch(getBiddingItemById(parseInt(id!)));
+    id && dispatch(getBids(parseInt(id!)));
+  }, [id]);
 
   useEffect(() => {
-    socket.on('placeBid', (message) => {
+    socket.on('placeBid', async (message) => {
         if(message.type === "NewBid") {
-            console.log(message);
-            dispatch(getBids(item?.id!));
+            id && await dispatch(getBids(parseInt(id!)));
+            id && await dispatch(getBiddingItemById(parseInt(id!)));
+            id && item && dispatch(setCurrentBidPrice({id: item?.id, bidPrice: item?.currentBid}));
         }
     });
     //return () => {
@@ -61,7 +62,7 @@ const Biddings = () => {
 
  if(!isLoggedIn) return <Navigate to='/login' />;
 
-  return isLoggedIn && (
+  return isLoggedIn && item && (
     <div style={{ padding: "16px 80px" }}>
       <div
         style={{

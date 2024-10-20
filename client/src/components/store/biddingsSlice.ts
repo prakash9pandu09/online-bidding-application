@@ -4,17 +4,25 @@ import { Bid, PlaceBidRequest, Product } from "../common/types";
 
 type InitialState = {
     biddingItems: Product[],
-    bids: Bid[]
+    bids: Bid[],
+    currentItem: Product | undefined,
 }
 export const initialState: InitialState = {
     biddingItems: [],
-    bids: []
+    bids: [],
+    currentItem: undefined,
 }
 
 export const getBiddingItems = createAsyncThunk('getBiddingItems', async () => {
     const getBiddingItemsResponse = await axios.get("http://localhost:5100/api/product/getItems", {withCredentials: true});
     const getBiddingItemsData = getBiddingItemsResponse.data
     return getBiddingItemsData;
+});
+
+export const getBiddingItemById = createAsyncThunk('getBiddingItemById', async (id: number) => {
+    const getBiddingItemResponse = await axios.get(`http://localhost:5100/api/product/getItemById/${id}`, {withCredentials: true});
+    const getBiddingItemData = getBiddingItemResponse.data
+    return getBiddingItemData;
 });
 
 export const placeBid = createAsyncThunk('placeBid', async (bidData: PlaceBidRequest) => {
@@ -53,13 +61,19 @@ export const biddingSlice = createSlice({
                 return item;
             });
             state.biddingItems = currentBidItems; 
-        }
+        },
+        updateCurrentItem : (state, action) => {
+            state.currentItem = action.payload;
+        },
     },
     extraReducers: (builder) => {
         builder.addCase(getBiddingItems.fulfilled, (state, action) => {
             if(action.payload.success) {
                 state.biddingItems = action.payload.data;
             }
+        });
+        builder.addCase(getBiddingItemById.fulfilled, (state, action) => {
+            state.currentItem = action.payload.data;
         });
         builder.addCase(placeBid.fulfilled, (state, action) => {
             state.bids = [action.payload.data, ...state.bids];
@@ -70,6 +84,6 @@ export const biddingSlice = createSlice({
     },
 });
 
-export const {setItemAsFavorite, setCurrentBidPrice} = biddingSlice.actions;
+export const {setItemAsFavorite, setCurrentBidPrice, updateCurrentItem} = biddingSlice.actions;
 
 export default biddingSlice.reducer;
