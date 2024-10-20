@@ -241,11 +241,13 @@ const Biddings = () => {
                 key={i}
                 style={{
                   display: "flex",
-                  gap: "4px",
-                //  fontWeight: bid("Your") ? "bold" : "normal",
+                  gap: "8px",
+                  fontWeight: i === 0 ? "bold" : "normal",
+                  alignItems: 'center'
                 }}
               >
-                {bid.user} bids {bid.bidPrice}
+                <span style={{height: '4px', width: '4px', backgroundColor: 'black', borderRadius: '50%'}}></span>
+                <span>{i === 0 && user.firstName === bid.user ? `Your bid is $${bid.bidPrice}` : `${bid.user} bids $${bid.bidPrice}`}</span>
               </li>
             ))}
           </ul>}
