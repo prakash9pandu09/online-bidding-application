@@ -18,7 +18,9 @@ import image5 from "../assets/5.jpg";
 import image6 from "../assets/6.jpg";
 import image7 from "../assets/7.jpg";
 import { getBids, placeBid, setCurrentBidPrice, setItemAsFavorite } from "./store/biddingsSlice";
-import { getUser } from "./store/userSlice";
+import { io } from "socket.io-client";
+
+const socket = io('http://localhost:5100', {withCredentials: true});
 
 const Biddings = () => {
   const { id } = useParams();
@@ -36,15 +38,28 @@ const Biddings = () => {
     });
   };
   const submitBid = async () => {
-    await delay(1000);
-    setShowDialog(false);
     dispatch(setCurrentBidPrice({id: item?.id, bidPrice}));
     dispatch(placeBid({bidPrice, productId: item?.id!, email: user.email}));
+    setShowDialog(false);
+    await delay(1000);
+    socket.emit('placeBid', ({type: 'NewBid'}));
   };
 
   useEffect(() => {
     isLoggedIn && dispatch(getBids(item?.id!));
   }, [id]);
+
+  useEffect(() => {
+    socket.on('placeBid', (message) => {
+        if(message.type === "NewBid") {
+            console.log(message);
+            dispatch(getBids(item?.id!));
+        }
+    });
+    //return () => {
+    //    socket.disconnect();
+    //}
+  }, []);
 
   if(!isLoggedIn) return <Navigate to='/login' />;
 
