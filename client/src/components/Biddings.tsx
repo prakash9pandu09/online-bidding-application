@@ -18,9 +18,7 @@ import image5 from "../assets/5.jpg";
 import image6 from "../assets/6.jpg";
 import image7 from "../assets/7.jpg";
 import { getBids, placeBid, setCurrentBidPrice, setItemAsFavorite } from "./store/biddingsSlice";
-import { io } from "socket.io-client";
-
-const socket = io('http://localhost:5100', {withCredentials: true});
+import { socket } from "../App";
 
 const Biddings = () => {
   const { id } = useParams();
@@ -46,8 +44,8 @@ const Biddings = () => {
   };
 
   useEffect(() => {
-    isLoggedIn && dispatch(getBids(item?.id!));
-  }, [id]);
+    dispatch(getBids(parseInt(id!)));
+  }, []);
 
   useEffect(() => {
     socket.on('placeBid', (message) => {
@@ -61,7 +59,7 @@ const Biddings = () => {
     //}
   }, []);
 
-  if(!isLoggedIn) return <Navigate to='/login' />;
+ if(!isLoggedIn) return <Navigate to='/login' />;
 
   return isLoggedIn && (
     <div style={{ padding: "16px 80px" }}>

@@ -58,7 +58,7 @@ router.post("/signin", async (req, res) => {
     process.env.TOKEN_KEY,
     { expiresIn: "30m" }
   );
-  res.cookie("jwt_token", token, { httpOnly: true, maxAge: 300000 });
+  res.cookie("jwt_token", token, { httpOnly: true, maxAge: 1000*60*60 });
 
   return res.json({
     status: 200,
@@ -91,7 +91,10 @@ const verifyUser = (req, res, next) => {
   };
 
 router.get("/verify", verifyUser, async (req, res) => {
-  return res.json({ status: 200, success: true, message: "Authorized" });
+  const token = req.cookies.jwt_token;
+  const decoded = jwt.decode(token, process.env.TOKEN_KEY);
+  const {firstName, lastName, email} = decoded;
+  return res.json({ status: 200, success: true, message: "Authorized", data: {firstName, lastName, email} });
 });
 
 router.get('/getUser', async (req, res) => {

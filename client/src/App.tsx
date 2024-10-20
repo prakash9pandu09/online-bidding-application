@@ -15,7 +15,13 @@ import AboutUs from "./components/AboutUs";
 import LanguagesSelection from "./components/LanguagesSelection";
 import { getBiddingItems } from "./components/store/biddingsSlice";
 
+import { io } from "socket.io-client";
+import useAuthorize from "./components/common/useAuthorize";
+
+export const socket = io('http://localhost:5100', {withCredentials: true});
+
 function App() {
+    useAuthorize();
     const headerColor = useSetHeaderBgColor();
     const dispatch = useAppDispatch();
     useEffect(() => {
